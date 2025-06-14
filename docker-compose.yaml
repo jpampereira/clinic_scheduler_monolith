@@ -1,0 +1,43 @@
+volumes:
+  database:
+
+networks:
+  clinic_scheduler_monolith:
+    driver: bridge
+
+services:
+  app:
+    container_name: app
+    image: clinic_scheduler_monolith:1.0
+    environment:
+      - APP_PORT=${APP_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./knexfile.js:/app/knexfile.js
+    networks:
+      - clinic_scheduler_monolith
+    restart: always
+    depends_on:
+      - database
+
+  database:
+    container_name: ${DB_HOST}
+    image: postgres:17.2-alpine3.21 # https://hub.docker.com/_/postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+      - TZ=America/Sao_Paulo
+      - PGTZ=America/Sao_Paulo
+    volumes:
+      - database:/var/lib/postgresql/data
+    networks:
+      - clinic_scheduler_monolith
