@@ -1,20 +1,19 @@
-const tableName = 'expertise';
+const tableName = 'profile';
 
-module.exports = class ExpertiseRepository {
+module.exports = class ProfileRepository {
   constructor(knex) {
     this.knex = knex;
   }
 
   static build(knex) {
-    return new ExpertiseRepository(knex);
+    return new ProfileRepository(knex);
   }
 
-  save(expertise) {
+  save(profile) {
     return this.knex(tableName)
-      .insert(expertise, [
+      .insert(profile, [
         'id',
         'name',
-        'description',
       ]);
   }
 
@@ -23,15 +22,14 @@ module.exports = class ExpertiseRepository {
       .select([
         'id',
         'name',
-        'description',
       ])
       .where(filter)
       .orderBy('created_at');
   }
 
-  update(id, expertise) {
+  update(id, profile) {
     return this.knex(tableName)
-      .update(expertise)
+      .update(profile)
       .where({ id });
   }
 };
