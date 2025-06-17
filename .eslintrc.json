@@ -12,6 +12,7 @@
     "rules": {
         "linebreak-style": ["error", "windows"],
         "arrow-body-style": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "max-len": "off"
     }
 }

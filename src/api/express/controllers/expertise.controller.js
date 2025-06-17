@@ -1,7 +1,6 @@
 const ExpertiseRepository = require('../../../models/repositories/knex/expertise.repository');
 const ExpertiseService = require('../../../models/services/expertise.service');
 const knex = require('../../../utils/knex');
-const exceptionHandling = require('../api.express.exception');
 
 module.exports = class ExpertiseController {
   static build() {
@@ -10,12 +9,12 @@ module.exports = class ExpertiseController {
 
   async create(request, response) {
     try {
-      const repository = ExpertiseRepository.build(knex);
-      const service = ExpertiseService.build(repository);
+      const expertiseRepository = ExpertiseRepository.build(knex);
+      const expertiseService = ExpertiseService.build(expertiseRepository);
 
       const { name, description } = request.body;
 
-      const output = await service.create(name, description);
+      const output = await expertiseService.create(name, description);
 
       const data = {
         id: output[0].id,
@@ -25,16 +24,16 @@ module.exports = class ExpertiseController {
 
       response.status(201).json(data);
     } catch (error) {
-      exceptionHandling(error, response);
+      response.status(error.httpStatus ?? 500).json({ error: error.message });
     }
   }
 
   async listAll(_, response) {
     try {
-      const repository = ExpertiseRepository.build(knex);
-      const service = ExpertiseService.build(repository);
+      const expertiseRepository = ExpertiseRepository.build(knex);
+      const expertiseService = ExpertiseService.build(expertiseRepository);
 
-      const output = await service.list();
+      const output = await expertiseService.list();
 
       if (output.length > 0) {
         const data = output.map((item) => {
@@ -50,18 +49,18 @@ module.exports = class ExpertiseController {
         response.status(204).send();
       }
     } catch (error) {
-      exceptionHandling(error, response);
+      response.status(error.httpStatus ?? 500).json({ error: error.message });
     }
   }
 
   async listById(request, response) {
     try {
-      const repository = ExpertiseRepository.build(knex);
-      const service = ExpertiseService.build(repository);
+      const expertiseRepository = ExpertiseRepository.build(knex);
+      const expertiseService = ExpertiseService.build(expertiseRepository);
 
       const { id } = request.params;
 
-      const output = await service.list({ id });
+      const output = await expertiseService.list({ id });
 
       if (output.length > 0) {
         const data = output.map((item) => {
@@ -77,23 +76,23 @@ module.exports = class ExpertiseController {
         response.status(204).send();
       }
     } catch (error) {
-      exceptionHandling(error, response);
+      response.status(error.httpStatus ?? 500).json({ error: error.message });
     }
   }
 
   async update(request, response) {
     try {
-      const repository = ExpertiseRepository.build(knex);
-      const service = ExpertiseService.build(repository);
+      const expertiseRepository = ExpertiseRepository.build(knex);
+      const expertiseService = ExpertiseService.build(expertiseRepository);
 
       const { id } = request.params;
       const { name, description } = request.body;
 
-      await service.update(id, name, description);
+      await expertiseService.update(id, name, description);
 
       response.status(204).send();
     } catch (error) {
-      exceptionHandling(error, response);
+      response.status(error.httpStatus ?? 500).json({ error: error.message });
     }
   }
 };

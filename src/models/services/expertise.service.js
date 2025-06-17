@@ -2,12 +2,12 @@ const ExpertiseEntity = require('../entities/expertise');
 const ValidationError = require('../../errors/ValidationError');
 
 module.exports = class ExpertiseService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(expertiseRepository) {
+    this.expertiseRepository = expertiseRepository;
   }
 
-  static build(repository) {
-    return new ExpertiseService(repository);
+  static build(expertiseRepository) {
+    return new ExpertiseService(expertiseRepository);
   }
 
   async create(name, description) {
@@ -15,12 +15,12 @@ module.exports = class ExpertiseService {
 
     expertise.validate();
 
-    const dbResult = await this.repository.list({ name });
+    const dbResult = await this.expertiseRepository.list({ name: expertise.name });
     if (dbResult.length > 0) {
-      throw new ValidationError(`Name '${name}' is already in use`);
+      throw new ValidationError(`Name '${expertise.name}' is already in use`);
     }
 
-    const output = await this.repository.save({
+    const output = await this.expertiseRepository.save({
       id: expertise.id,
       name: expertise.name,
       description: expertise.description,
@@ -30,27 +30,33 @@ module.exports = class ExpertiseService {
   }
 
   async list(filter) {
-    const output = await this.repository.list(filter);
+    const output = await this.expertiseRepository.list(filter);
 
     return output;
   }
 
   async update(id, name, description) {
-    const expertise = ExpertiseEntity.with(id, name, description);
+    let expertise;
 
-    expertise.validate();
+    [expertise] = await this.expertiseRepository.list({ id });
 
-    const dbResult = await this.repository.list({ name });
-    if (dbResult.length > 0) {
-      throw new ValidationError(`Name '${name}' is already in use`);
+    if (expertise !== undefined) {
+      expertise = ExpertiseEntity.with(id, name, description);
+
+      expertise.validate();
+
+      const dbResult = await this.expertiseRepository.list({ name });
+      if (dbResult.length > 0) {
+        throw new ValidationError(`Name '${name}' is already in use`);
+      }
+
+      await this.expertiseRepository.update(
+        id,
+        {
+          name: expertise.name,
+          description: expertise.description,
+        },
+      );
     }
-
-    await this.repository.update(
-      id,
-      {
-        name,
-        description,
-      },
-    );
   }
 };

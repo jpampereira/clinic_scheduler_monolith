@@ -1,5 +1,6 @@
 volumes:
   database:
+  database_client:
 
 networks:
   clinic_scheduler_monolith:
@@ -41,3 +42,19 @@ services:
       - database:/var/lib/postgresql/data
     networks:
       - clinic_scheduler_monolith
+
+  database_client:
+    container_name: database_client
+    image: dpage/pgadmin4:9.4.0 # https://hub.docker.com/r/dpage/pgadmin4/
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgres@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    ports:
+      - 80:80
+    volumes:
+      - database_client:/var/lib/pgadmin
+    networks:
+      - clinic_scheduler_monolith
+    depends_on:
+      - database

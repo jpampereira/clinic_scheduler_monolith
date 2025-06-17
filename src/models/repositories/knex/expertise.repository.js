@@ -11,20 +11,12 @@ module.exports = class ExpertiseRepository {
 
   save(expertise) {
     return this.knex(tableName)
-      .insert(expertise, [
-        'id',
-        'name',
-        'description',
-      ]);
+      .insert(expertise, ['*']);
   }
 
   list(filter = {}) {
     return this.knex(tableName)
-      .select([
-        'id',
-        'name',
-        'description',
-      ])
+      .select(['*'])
       .where(filter)
       .orderBy('created_at');
   }

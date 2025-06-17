@@ -1,7 +1,8 @@
 const uuid = require('uuid-random');
 
 exports.seed = (knex) => {
-  return knex('expertise').del()
+  return knex('user').del()
+    .then(() => knex('expertise').del())
     .then(() => knex('expertise').insert([
       {
         id: uuid(),
