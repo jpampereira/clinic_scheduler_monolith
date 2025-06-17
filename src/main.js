@@ -1,5 +1,6 @@
 const apiExpress = require('./api/express/api.express');
 const ExpertiseController = require('./api/express/controllers/expertise.controller');
+const AuthController = require('./api/express/controllers/auth.controller');
 const UserController = require('./api/express/controllers/user.controller');
 
 function main() {
@@ -12,9 +13,12 @@ function main() {
   api.addGetRoute('/expertise/:id', expertiseController.listById);
   api.addPutRoute('/expertise/:id', expertiseController.update);
 
+  const authController = AuthController.build();
+
+  api.addPostRoute('/auth/signup', authController.signup);
+
   const userController = UserController.build();
 
-  api.addPostRoute('/signup', userController.create);
   api.addGetRoute('/user', userController.listAll);
   api.addGetRoute('/user/administrator', userController.listAllByProfile);
   api.addGetRoute('/user/patient', userController.listAllByProfile);

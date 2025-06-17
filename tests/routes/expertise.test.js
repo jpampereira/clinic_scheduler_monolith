@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { execSync } = require('child_process');
+const knex = require('../../src/utils/knex');
 
 const API_URL = `127.0.0.1:${process.env.APP_PORT}`;
 const MAIN_ROUTE = '/expertise';
@@ -15,7 +15,7 @@ const expertise2 = {
 };
 
 beforeAll(() => {
-  execSync('npx knex seed:run --specific=expertise.js');
+  return knex.seed.run({ specific: 'expertise.js' });
 });
 
 test('Must insert a new expertise', () => {
