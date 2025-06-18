@@ -1,6 +1,7 @@
 const UserRepository = require('../../../models/repositories/knex/user.repository');
 const ExpertiseRepository = require('../../../models/repositories/knex/expertise.repository');
 const UserService = require('../../../models/services/user.service');
+const AuthService = require('../../../models/services/auth.service');
 const knex = require('../../../utils/knex');
 
 module.exports = class AuthController {
@@ -52,6 +53,33 @@ module.exports = class AuthController {
       };
 
       response.status(201).json(data);
+    } catch (error) {
+      response.status(error.httpStatus ?? 500).json({ error: error.message });
+    }
+  }
+
+  async signin(request, response) {
+    try {
+      const userRepository = UserRepository.build(knex);
+      const authService = AuthService.build(userRepository);
+
+      const {
+        username,
+        password,
+      } = request.body;
+
+      const output = await authService.authenticate(
+        username,
+        password,
+      );
+
+      const data = {
+        token: output.token,
+        expiresAt: output.expiresAt,
+        type: output.type,
+      };
+
+      response.status(200).json(data);
     } catch (error) {
       response.status(error.httpStatus ?? 500).json({ error: error.message });
     }

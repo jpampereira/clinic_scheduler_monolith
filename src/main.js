@@ -16,6 +16,7 @@ function main() {
   const authController = AuthController.build();
 
   api.addPostRoute('/auth/signup', authController.signup);
+  api.addPostRoute('/auth/signin', authController.signin);
 
   const userController = UserController.build();
 

@@ -9,6 +9,4 @@ WORKDIR /app
 
 RUN npm install
 
-WORKDIR /app/src
-
 CMD ["npm", "start"]

@@ -168,3 +168,56 @@ describe('Must not create a new user by signup route...', () => {
   test('...with expertiseId attribute out of format', () => testTemplate({ ...doctor, expertiseId: 1 }, 'ExpertiseId attribute must be an string'));
   test('...with a expertiseId that not exists', () => testTemplate({ ...doctor, expertiseId: `${expertiseId}x` }, `ExpertiseId '${expertiseId}x' not exists`));
 });
+
+test('Must return a token by signin route using a valid mail and password', () => {
+  return request(API_URL).post(`${MAIN_ROUTE}/signin`)
+    .send({
+      username: 'bernardo.duarte@mail.com',
+      password: 'PmiGoKCD2N',
+    })
+    .then((res) => {
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      expect(res.body).toHaveProperty('expiresAt');
+      expect(res.body).toHaveProperty('type');
+    });
+});
+
+test('Must return a token by signin route using a valid cpf and password', () => {
+  return request(API_URL).post(`${MAIN_ROUTE}/signin`)
+    .send({
+      username: '37002462261',
+      password: 'PmiGoKCD2N',
+    })
+    .then((res) => {
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('token');
+      expect(res.body).toHaveProperty('expiresAt');
+      expect(res.body).toHaveProperty('type');
+    });
+});
+
+describe('Must not return a token by signin route...', () => {
+  const testTemplate = (userCredentials, errorMessage, httpStatus) => {
+    return request(API_URL).post(`${MAIN_ROUTE}/signin`)
+      .send(userCredentials)
+      .then((res) => {
+        expect(res.status).toBe(httpStatus);
+        expect(res.body.error).toBe(errorMessage);
+      });
+  };
+
+  const userCredentials = {
+    username: 'bernardo.duarte@mail.com',
+    password: 'PmiGoKCD2N',
+  };
+
+  test('...without username attribute', () => testTemplate({ ...userCredentials, username: undefined }, 'Username attribute is mandatory', 400));
+  test('...with username attribute out of format', () => testTemplate({ ...userCredentials, username: 1 }, 'Username attribute must be an string', 400));
+  test('...with an invalid username (mail)', () => testTemplate({ ...userCredentials, username: 'rosangela.caldeira@mail.com' }, 'Invalid username or password', 401));
+  test('...with an invalid username (cpf)', () => testTemplate({ ...userCredentials, username: '50793629870' }, 'Invalid username or password', 401));
+
+  test('...without password attribute', () => testTemplate({ ...userCredentials, password: undefined }, 'Password attribute is mandatory', 400));
+  test('...with password attribute out of format', () => testTemplate({ ...userCredentials, password: 1234567890 }, 'Password attribute must be an string', 400));
+  test('...with an invalid password', () => testTemplate({ ...userCredentials, password: 'fetuHDJdKd' }, 'Invalid username or password', 401));
+});
