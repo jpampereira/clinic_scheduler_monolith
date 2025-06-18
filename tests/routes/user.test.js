@@ -265,3 +265,37 @@ describe('Must not updated a user by id...', () => {
   test('...with expertiseId attribute out of format', () => testTemplate(doctor1.id, { ...doctor1, expertiseId: 1 }, 'ExpertiseId attribute must be an string'));
   test('...with a expertiseId that not exists', () => testTemplate(doctor1.id, { ...doctor1, expertiseId: `${doctor1.expertiseId}x` }, `ExpertiseId '${doctor1.expertiseId}x' not exists`));
 });
+
+describe('Must active an user', () => {
+  test('Activate user', () => {
+    return request(API_URL).patch(`${MAIN_ROUTE}/${administrator.id}/activate`)
+      .then((res) => {
+        expect(res.status).toBe(204);
+      });
+  });
+
+  test('Check if the user has been activated', () => {
+    return request(API_URL).get(`${MAIN_ROUTE}/${administrator.id}`)
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body[0]).toHaveProperty('status', true);
+      });
+  });
+});
+
+describe('Must deactivate an user', () => {
+  test('Activate user', () => {
+    return request(API_URL).patch(`${MAIN_ROUTE}/${patient.id}/deactivate`)
+      .then((res) => {
+        expect(res.status).toBe(204);
+      });
+  });
+
+  test('Check if the user has been activated', () => {
+    return request(API_URL).get(`${MAIN_ROUTE}/${patient.id}`)
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body[0]).toHaveProperty('status', false);
+      });
+  });
+});

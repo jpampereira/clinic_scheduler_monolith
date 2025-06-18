@@ -27,6 +27,10 @@ module.exports = class ApiExpress {
     this.app.put(path, callback);
   }
 
+  addPatchRoute(path, callback) {
+    this.app.patch(path, callback);
+  }
+
   start(port) {
     this.app.listen(port, () => {
       console.log(`Server running at port ${port}!`);

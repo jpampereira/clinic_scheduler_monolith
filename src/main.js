@@ -26,6 +26,8 @@ function main() {
   api.addGetRoute('/user/doctor', userController.listAllByProfile);
   api.addGetRoute('/user/:id', userController.listById);
   api.addPutRoute('/user/:id', userController.update);
+  api.addPatchRoute('/user/:id/activate', userController.setStatus);
+  api.addPatchRoute('/user/:id/deactivate', userController.setStatus);
 
   api.start(process.env.APP_PORT);
 }

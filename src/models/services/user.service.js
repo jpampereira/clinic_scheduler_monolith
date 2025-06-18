@@ -92,9 +92,7 @@ module.exports = class UserService {
   }
 
   async update(id, name, cpf, birthdate, mail, phone, crm, expertiseId) {
-    let user;
-
-    [user] = await this.userRepository.list({ id });
+    let [user] = await this.userRepository.list({ id });
 
     if (user !== undefined) {
       switch (user.profile) {
@@ -147,7 +145,7 @@ module.exports = class UserService {
       }
 
       await this.userRepository.update(
-        id,
+        user.id,
         {
           name: user.name,
           cpf: user.cpf,
@@ -156,6 +154,45 @@ module.exports = class UserService {
           phone: user.phone,
           crm: user.crm,
           expertise_id: user.expertiseId,
+        },
+      );
+    }
+  }
+
+  async setStatus(id, action) {
+    let user;
+
+    [user] = await this.userRepository.list({ id });
+
+    if (user !== undefined) {
+      switch (user.profile) {
+        case 'Administrator':
+          user = AdministratorEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.status);
+          break;
+
+        case 'Patient':
+          user = PatientEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.status);
+          break;
+
+        case 'Doctor':
+          user = DoctorEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.status, user.crm, user.expertiseId);
+          break;
+
+        default:
+          user = UserEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.profile, user.status);
+          break;
+      }
+
+      if (action.match(/deactivate/)) {
+        user.deactivate();
+      } else {
+        user.activate();
+      }
+
+      await this.userRepository.update(
+        user.id,
+        {
+          status: user.status,
         },
       );
     }

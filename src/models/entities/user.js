@@ -130,4 +130,12 @@ module.exports = class User {
   encryptPassword() {
     this.password = encryptPassword(this.password);
   }
+
+  activate() {
+    this.status = true;
+  }
+
+  deactivate() {
+    this.status = false;
+  }
 };

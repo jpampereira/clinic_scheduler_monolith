@@ -15,16 +15,18 @@ module.exports = class UserController {
       const userService = UserService.build(userRepository, expertiseRepository);
 
       const {
-        name,
-        cpf,
-        birthdate,
-        mail,
-        phone,
-        profile,
-        password,
-        crm,
-        expertiseId,
-      } = request.body;
+        body: {
+          name,
+          cpf,
+          birthdate,
+          mail,
+          phone,
+          profile,
+          password,
+          crm,
+          expertiseId,
+        },
+      } = request;
 
       const output = await userService.create(
         name,
@@ -94,13 +96,14 @@ module.exports = class UserController {
       const userRepository = UserRepository.build(knex);
       const userService = UserService.build(userRepository);
 
+      const { path } = request;
       let profile;
 
-      if (request.path.match(/administrator/)) {
+      if (path.match(/administrator/)) {
         profile = 'Administrator';
-      } else if (request.path.match(/patient/)) {
+      } else if (path.match(/patient/)) {
         profile = 'Patient';
-      } else if (request.path.match(/doctor/)) {
+      } else if (path.match(/doctor/)) {
         profile = 'Doctor';
       }
 
@@ -136,7 +139,7 @@ module.exports = class UserController {
       const userRepository = UserRepository.build(knex);
       const userService = UserService.build(userRepository);
 
-      const { id } = request.params;
+      const { params: { id } } = request;
 
       const output = await userService.list({ id });
 
@@ -171,16 +174,20 @@ module.exports = class UserController {
       const expertiseRepository = ExpertiseRepository.build(knex);
       const userService = UserService.build(userRepository, expertiseRepository);
 
-      const { id } = request.params;
       const {
-        name,
-        cpf,
-        birthdate,
-        mail,
-        phone,
-        crm,
-        expertiseId,
-      } = request.body;
+        params: {
+          id,
+        },
+        body: {
+          name,
+          cpf,
+          birthdate,
+          mail,
+          phone,
+          crm,
+          expertiseId,
+        },
+      } = request;
 
       await userService.update(
         id,
@@ -192,6 +199,21 @@ module.exports = class UserController {
         crm,
         expertiseId,
       );
+
+      response.status(204).send();
+    } catch (error) {
+      response.status(error.httpStatus ?? 500).json({ error: error.message });
+    }
+  }
+
+  async setStatus(request, response) {
+    try {
+      const userRepository = UserRepository.build(knex);
+      const userService = UserService.build(userRepository);
+
+      const { params: { id }, path } = request;
+
+      await userService.setStatus(id, path);
 
       response.status(204).send();
     } catch (error) {
