@@ -19,7 +19,7 @@ module.exports = class UserRepository {
         'mail',
         'phone',
         'password',
-        'profile',
+        'role',
         'status',
         'crm',
         'expertise_id',
@@ -36,7 +36,7 @@ module.exports = class UserRepository {
         'mail',
         'phone',
         'password',
-        'profile',
+        'role',
         'status',
         'crm',
         'expertise_id',
@@ -48,6 +48,7 @@ module.exports = class UserRepository {
   update(id, user) {
     return this.knex(tableName)
       .update(user)
-      .where({ id });
+      .where({ id })
+      .andWhereNot({ id: process.env.SUPER_ADMIN_ID });
   }
 };

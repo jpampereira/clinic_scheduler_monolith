@@ -3,7 +3,7 @@ const ValidationError = require('../../errors/ValidationError');
 const encryptPassword = require('../../utils/hashGenerator');
 
 module.exports = class User {
-  constructor(id, name, cpf, birthdate, mail, phone, password, profile, status) {
+  constructor(id, name, cpf, birthdate, mail, phone, password, role, status) {
     this.id = id;
     this.name = name;
     this.cpf = cpf;
@@ -11,11 +11,11 @@ module.exports = class User {
     this.mail = mail;
     this.phone = phone;
     this.password = password;
-    this.profile = profile;
+    this.role = role;
     this.status = status;
   }
 
-  static build(name, cpf, birthdate, mail, phone, password, profile) {
+  static build(name, cpf, birthdate, mail, phone, password, role) {
     return new User(
       uuid(),
       name,
@@ -24,12 +24,12 @@ module.exports = class User {
       mail,
       phone,
       password,
-      profile,
+      role,
       false,
     );
   }
 
-  static with(id, name, cpf, birthdate, mail, phone, password, profile, status) {
+  static with(id, name, cpf, birthdate, mail, phone, password, role, status) {
     return new User(
       id,
       name,
@@ -38,7 +38,7 @@ module.exports = class User {
       mail,
       phone,
       password,
-      profile,
+      role,
       status,
     );
   }
@@ -49,7 +49,7 @@ module.exports = class User {
     this.validateBirthdate();
     this.validateMail();
     this.validatePhone();
-    this.validateProfile();
+    this.validateRole();
     this.validatePassword();
     this.validateStatus();
   }
@@ -111,10 +111,10 @@ module.exports = class User {
     if (!this.phone.match(/^\d{11}$/)) throw new ValidationError('Phone attribute must be in format DDD+9 digits');
   }
 
-  validateProfile() {
-    if (!this.profile) throw new ValidationError('Profile attribute is mandatory');
-    if (typeof this.profile !== 'string') throw new ValidationError('Profile attribute must be an string');
-    if (this.profile !== 'Administrator' && this.profile !== 'Patient' && this.profile !== 'Doctor') throw new ValidationError('Profile attribute must be \'Administrator\', \'Patient\' or \'Doctor\'');
+  validateRole() {
+    if (!this.role) throw new ValidationError('Role attribute is mandatory');
+    if (typeof this.role !== 'string') throw new ValidationError('Role attribute must be an string');
+    if (this.role !== 'Administrator' && this.role !== 'Patient' && this.role !== 'Doctor') throw new ValidationError('Role attribute must be \'Administrator\', \'Patient\' or \'Doctor\'');
   }
 
   validatePassword() {

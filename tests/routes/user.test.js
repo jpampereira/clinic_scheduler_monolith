@@ -12,7 +12,7 @@ const patient = {
   birthdate: '1955-04-13',
   mail: 'bernardo.duarte@mail.com',
   phone: '27986155673',
-  profile: 'Patient',
+  role: 'Patient',
   password: 'PmiGoKCD2N',
 };
 
@@ -22,7 +22,7 @@ const administrator = {
   birthdate: '1993-03-12',
   mail: 'rosangela.caldeira@mail.com',
   phone: '81997744857',
-  profile: 'Administrator',
+  role: 'Administrator',
   password: 'fetuHDJdKd',
 };
 
@@ -37,7 +37,7 @@ const doctor1 = {
   birthdate: '1984-03-08',
   mail: 'martin.rocha@mail.com',
   phone: '82987230572',
-  profile: 'Doctor',
+  role: 'Doctor',
   password: '9miwzDsfQU',
   crm: 'CRM/AL 123456',
 };
@@ -48,7 +48,7 @@ const doctor2 = {
   birthdate: '1971-03-10',
   mail: 'gabriela.aragao@mail.com',
   phone: '86994246007',
-  profile: 'Doctor',
+  role: 'Doctor',
   password: '8M123KdiQE',
   crm: 'CRM/PI 123456',
 };
@@ -95,7 +95,7 @@ test('Must return all users', () => {
       expect(res.body[0]).toHaveProperty('birthdate');
       expect(res.body[0]).toHaveProperty('mail');
       expect(res.body[0]).toHaveProperty('phone');
-      expect(res.body[0]).toHaveProperty('profile');
+      expect(res.body[0]).toHaveProperty('role');
       expect(res.body[0]).not.toHaveProperty('password');
       expect(res.body[0]).toHaveProperty('status');
       expect(res.body[0]).toHaveProperty('crm');
@@ -114,7 +114,7 @@ test('Must return all administrators', () => {
       expect(res.body[0]).toHaveProperty('birthdate');
       expect(res.body[0]).toHaveProperty('mail');
       expect(res.body[0]).toHaveProperty('phone');
-      expect(res.body[0]).toHaveProperty('profile', 'Administrator');
+      expect(res.body[0]).toHaveProperty('role', 'Administrator');
       expect(res.body[0]).not.toHaveProperty('password');
       expect(res.body[0]).toHaveProperty('status');
       expect(res.body[0]).toHaveProperty('crm');
@@ -133,7 +133,7 @@ test('Must return all patients', () => {
       expect(res.body[0]).toHaveProperty('birthdate');
       expect(res.body[0]).toHaveProperty('mail');
       expect(res.body[0]).toHaveProperty('phone');
-      expect(res.body[0]).toHaveProperty('profile', 'Patient');
+      expect(res.body[0]).toHaveProperty('role', 'Patient');
       expect(res.body[0]).not.toHaveProperty('password');
       expect(res.body[0]).toHaveProperty('status');
       expect(res.body[0]).toHaveProperty('crm');
@@ -152,7 +152,7 @@ test('Must return all doctors', () => {
       expect(res.body[0]).toHaveProperty('birthdate');
       expect(res.body[0]).toHaveProperty('mail');
       expect(res.body[0]).toHaveProperty('phone');
-      expect(res.body[0]).toHaveProperty('profile', 'Doctor');
+      expect(res.body[0]).toHaveProperty('role', 'Doctor');
       expect(res.body[0]).not.toHaveProperty('password');
       expect(res.body[0]).toHaveProperty('status');
       expect(res.body[0]).toHaveProperty('crm');
@@ -160,7 +160,7 @@ test('Must return all doctors', () => {
     });
 });
 
-// Example using a doctor but it works for every user profile
+// Example using a doctor but it works for every user role
 test('Must return an user by id', () => {
   return request(API_URL).get(`${MAIN_ROUTE}/${doctor1.id}`)
     .then((res) => {
@@ -172,7 +172,7 @@ test('Must return an user by id', () => {
       expect(res.body[0]).toHaveProperty('birthdate', doctor1.birthdate);
       expect(res.body[0]).toHaveProperty('mail', doctor1.mail);
       expect(res.body[0]).toHaveProperty('phone', doctor1.phone);
-      expect(res.body[0]).toHaveProperty('profile', doctor1.profile);
+      expect(res.body[0]).toHaveProperty('role', doctor1.role);
       expect(res.body[0]).not.toHaveProperty('password');
       expect(res.body[0]).toHaveProperty('status', false);
       expect(res.body[0]).toHaveProperty('crm', doctor1.crm);
@@ -204,7 +204,7 @@ describe('Must update an user by id', () => {
         expect(res.body[0]).toHaveProperty('birthdate', '1996-12-11');
         expect(res.body[0]).toHaveProperty('mail', 'joao.pereira@mail.com');
         expect(res.body[0]).toHaveProperty('phone', patient.phone);
-        expect(res.body[0]).toHaveProperty('profile', patient.profile);
+        expect(res.body[0]).toHaveProperty('role', patient.role);
         expect(res.body[0]).not.toHaveProperty('password');
         expect(res.body[0]).toHaveProperty('status', true);
         expect(res.body[0]).toHaveProperty('crm', null);

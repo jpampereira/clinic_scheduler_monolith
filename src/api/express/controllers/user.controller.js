@@ -21,7 +21,7 @@ module.exports = class UserController {
           birthdate,
           mail,
           phone,
-          profile,
+          role,
           password,
           crm,
           expertiseId,
@@ -34,7 +34,7 @@ module.exports = class UserController {
         birthdate,
         mail,
         phone,
-        profile,
+        role,
         password,
         crm,
         expertiseId,
@@ -47,7 +47,7 @@ module.exports = class UserController {
         birthdate: output[0].birthdate,
         mail: output[0].mail,
         phone: output[0].phone,
-        profile: output[0].profile,
+        role: output[0].role,
         status: output[0].status,
         crm: output[0].crm,
         expertiseId: output[0].expertise_id,
@@ -75,7 +75,7 @@ module.exports = class UserController {
             birthdate: user.birthdate,
             mail: user.mail,
             phone: user.phone,
-            profile: user.profile,
+            role: user.role,
             status: user.status,
             crm: user.crm,
             expertiseId: user.expertise_id,
@@ -91,23 +91,23 @@ module.exports = class UserController {
     }
   }
 
-  async listAllByProfile(request, response) {
+  async listAllByRole(request, response) {
     try {
       const userRepository = UserRepository.build(knex);
       const userService = UserService.build(userRepository);
 
       const { path } = request;
-      let profile;
+      let role;
 
       if (path.match(/administrator/)) {
-        profile = 'Administrator';
+        role = 'Administrator';
       } else if (path.match(/patient/)) {
-        profile = 'Patient';
+        role = 'Patient';
       } else if (path.match(/doctor/)) {
-        profile = 'Doctor';
+        role = 'Doctor';
       }
 
-      const output = await userService.list({ profile });
+      const output = await userService.list({ role });
 
       if (output.length > 0) {
         const data = output.map((user) => {
@@ -118,7 +118,7 @@ module.exports = class UserController {
             birthdate: user.birthdate,
             mail: user.mail,
             phone: user.phone,
-            profile: user.profile,
+            role: user.role,
             status: user.status,
             crm: user.crm,
             expertiseId: user.expertise_id,
@@ -152,7 +152,7 @@ module.exports = class UserController {
             birthdate: user.birthdate,
             mail: user.mail,
             phone: user.phone,
-            profile: user.profile,
+            role: user.role,
             status: user.status,
             crm: user.crm,
             expertiseId: user.expertise_id,

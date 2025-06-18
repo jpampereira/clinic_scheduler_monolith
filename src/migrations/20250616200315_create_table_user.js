@@ -7,7 +7,7 @@ exports.up = (knex) => {
     table.string('mail').notNull().unique();
     table.string('phone').notNull().unique();
     table.string('password').notNull();
-    table.enu('profile', ['Administrator', 'Patient', 'Doctor']).notNull();
+    table.enu('role', ['Administrator', 'Patient', 'Doctor']).notNull();
     table.boolean('status').notNull();
     table.string('crm');
     table.string('expertise_id').references('id').inTable('expertise');

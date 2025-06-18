@@ -4,7 +4,7 @@ const encryptPassword = require('../../src/utils/hashGenerator');
 const expertiseId = uuid();
 
 exports.seed = (knex) => {
-  return knex('user').del()
+  return knex('user').whereNot({ id: process.env.SUPER_ADMIN_ID }).del()
     .then(() => knex('expertise').del())
     .then(() => knex('expertise').insert([
       {
@@ -22,7 +22,7 @@ exports.seed = (knex) => {
         mail: 'stefany.assis@mail.com',
         phone: '94981968224',
         password: encryptPassword('DPATTSbCw1'),
-        profile: 'Doctor',
+        role: 'Doctor',
         status: false,
         crm: 'CRM/PA 123456',
         expertise_id: expertiseId,
@@ -35,7 +35,7 @@ exports.seed = (knex) => {
         mail: 'marcia.almeida@mail.com',
         phone: '65984573857',
         password: encryptPassword('qyhuqwkPNq'),
-        profile: 'Patient',
+        role: 'Patient',
         status: true,
         crm: null,
         expertise_id: null,
@@ -48,7 +48,7 @@ exports.seed = (knex) => {
         mail: 'agatha.ribeiro@mail.com',
         phone: '91986168227',
         password: encryptPassword('ykGmrOHFFb'),
-        profile: 'Patient',
+        role: 'Patient',
         status: true,
         crm: null,
         expertise_id: null,
@@ -61,7 +61,7 @@ exports.seed = (knex) => {
         mail: 'juan.silva@mail.com',
         phone: '92984439465',
         password: encryptPassword('lcL3p8ECql'),
-        profile: 'Administrator',
+        role: 'Administrator',
         status: false,
         crm: null,
         expertise_id: null,
@@ -74,7 +74,7 @@ exports.seed = (knex) => {
         mail: 'giovana.gomes@mail.com',
         phone: '82995391627',
         password: encryptPassword('euO8bNKMYU'),
-        profile: 'Administrator',
+        role: 'Administrator',
         status: false,
         crm: null,
         expertise_id: null,
@@ -87,7 +87,7 @@ exports.seed = (knex) => {
         mail: 'bruno.paz@mail.com',
         phone: '67995313754',
         password: encryptPassword('tudQXDes0I'),
-        profile: 'Administrator',
+        role: 'Administrator',
         status: false,
         crm: null,
         expertise_id: null,

@@ -21,9 +21,9 @@ function main() {
   const userController = UserController.build();
 
   api.addGetRoute('/user', userController.listAll);
-  api.addGetRoute('/user/administrator', userController.listAllByProfile);
-  api.addGetRoute('/user/patient', userController.listAllByProfile);
-  api.addGetRoute('/user/doctor', userController.listAllByProfile);
+  api.addGetRoute('/user/administrator', userController.listAllByRole);
+  api.addGetRoute('/user/patient', userController.listAllByRole);
+  api.addGetRoute('/user/doctor', userController.listAllByRole);
   api.addGetRoute('/user/:id', userController.listById);
   api.addPutRoute('/user/:id', userController.update);
   api.addPatchRoute('/user/:id/activate', userController.setStatus);

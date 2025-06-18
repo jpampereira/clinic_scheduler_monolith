@@ -21,7 +21,7 @@ module.exports = class AuthService {
       throw new AuthorizationError('Invalid username or password');
     }
 
-    const output = AuthEntity.generateToken(user.id, user.profile);
+    const output = AuthEntity.generateToken(user.id, user.role);
 
     return output;
   }

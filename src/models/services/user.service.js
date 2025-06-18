@@ -14,10 +14,10 @@ module.exports = class UserService {
     return new UserService(userRepository, expertiseRepository);
   }
 
-  async create(name, cpf, birthdate, mail, phone, profile, password, crm, expertiseId) {
+  async create(name, cpf, birthdate, mail, phone, role, password, crm, expertiseId) {
     let user;
 
-    switch (profile) {
+    switch (role) {
       case 'Administrator':
         user = AdministratorEntity.build(name, cpf, birthdate, mail, phone, password);
         break;
@@ -31,7 +31,7 @@ module.exports = class UserService {
         break;
 
       default:
-        user = UserEntity.build(name, cpf, birthdate, mail, phone, password, profile);
+        user = UserEntity.build(name, cpf, birthdate, mail, phone, password, role);
         break;
     }
 
@@ -54,7 +54,7 @@ module.exports = class UserService {
       throw new ValidationError(`Mail '${user.mail}' is already in use`);
     }
 
-    if (user.profile === 'Doctor') {
+    if (user.role === 'Doctor') {
       dbResult = await this.userRepository.list({ crm: user.crm });
       if (dbResult.length > 0) {
         throw new ValidationError(`Crm '${user.crm}' is already in use`);
@@ -76,7 +76,7 @@ module.exports = class UserService {
       mail: user.mail,
       phone: user.phone,
       password: user.password,
-      profile: user.profile,
+      role: user.role,
       status: user.status,
       crm: user.crm,
       expertise_id: user.expertiseId,
@@ -86,7 +86,10 @@ module.exports = class UserService {
   }
 
   async list(filter) {
-    const output = await this.userRepository.list(filter);
+    let output;
+
+    output = await this.userRepository.list(filter);
+    output = output.filter((user) => user.id !== process.env.SUPER_ADMIN_ID);
 
     return output;
   }
@@ -95,7 +98,7 @@ module.exports = class UserService {
     let [user] = await this.userRepository.list({ id });
 
     if (user !== undefined) {
-      switch (user.profile) {
+      switch (user.role) {
         case 'Administrator':
           user = AdministratorEntity.with(id, name, cpf, birthdate, mail, phone, user.password, user.status);
           break;
@@ -109,7 +112,7 @@ module.exports = class UserService {
           break;
 
         default:
-          user = UserEntity.with(id, name, cpf, birthdate, mail, phone, user.password, user.profile, user.status);
+          user = UserEntity.with(id, name, cpf, birthdate, mail, phone, user.password, user.role, user.status);
           break;
       }
 
@@ -132,7 +135,7 @@ module.exports = class UserService {
         throw new ValidationError(`Mail '${user.mail}' is already in use`);
       }
 
-      if (user.profile === 'Doctor') {
+      if (user.role === 'Doctor') {
         dbResult = await this.userRepository.list({ crm: user.crm });
         if (dbResult.length > 0 && dbResult[0].id !== user.id) {
           throw new ValidationError(`Crm '${user.crm}' is already in use`);
@@ -165,7 +168,7 @@ module.exports = class UserService {
     [user] = await this.userRepository.list({ id });
 
     if (user !== undefined) {
-      switch (user.profile) {
+      switch (user.role) {
         case 'Administrator':
           user = AdministratorEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.status);
           break;
@@ -179,7 +182,7 @@ module.exports = class UserService {
           break;
 
         default:
-          user = UserEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.profile, user.status);
+          user = UserEntity.with(user.id, user.name, user.cpf, user.birthdate, user.mail, user.phone, user.password, user.role, user.status);
           break;
       }
 

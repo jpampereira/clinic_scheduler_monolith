@@ -16,10 +16,10 @@ module.exports = class Auth {
     return bcrypt.compareSync(inputPassword, storedHash);
   }
 
-  static generateToken(userId, userProfile) {
+  static generateToken(userId, userRole) {
     const payload = {
       id: userId,
-      profile: userProfile,
+      role: userRole,
     };
 
     const tokenJwt = jwt.encode(payload, process.env.JWT_SECRET);

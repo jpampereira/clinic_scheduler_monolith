@@ -29,7 +29,7 @@ test('Must create a new patient user by signup route', () => {
       birthdate: '1955-04-13',
       mail: 'bernardo.duarte@mail.com',
       phone: '27986155673',
-      profile: 'Patient',
+      role: 'Patient',
       password: 'PmiGoKCD2N',
     })
     .then((res) => {
@@ -40,7 +40,7 @@ test('Must create a new patient user by signup route', () => {
       expect(res.body).toHaveProperty('birthdate', '1955-04-13');
       expect(res.body).toHaveProperty('mail', 'bernardo.duarte@mail.com');
       expect(res.body).toHaveProperty('phone', '27986155673');
-      expect(res.body).toHaveProperty('profile', 'Patient');
+      expect(res.body).toHaveProperty('role', 'Patient');
       expect(res.body).not.toHaveProperty('password');
       expect(res.body).toHaveProperty('status', true);
       expect(res.body).toHaveProperty('crm', null);
@@ -56,7 +56,7 @@ test('Must create a new administrator user by signup route', () => {
       birthdate: '1993-03-12',
       mail: 'rosangela.caldeira@mail.com',
       phone: '81997744857',
-      profile: 'Administrator',
+      role: 'Administrator',
       password: 'fetuHDJdKd',
     })
     .then((res) => {
@@ -67,7 +67,7 @@ test('Must create a new administrator user by signup route', () => {
       expect(res.body).toHaveProperty('birthdate', '1993-03-12');
       expect(res.body).toHaveProperty('mail', 'rosangela.caldeira@mail.com');
       expect(res.body).toHaveProperty('phone', '81997744857');
-      expect(res.body).toHaveProperty('profile', 'Administrator');
+      expect(res.body).toHaveProperty('role', 'Administrator');
       expect(res.body).not.toHaveProperty('password');
       expect(res.body).toHaveProperty('status', false);
       expect(res.body).toHaveProperty('crm', null);
@@ -83,7 +83,7 @@ test('Must create a new doctor user by signup route', () => {
       birthdate: '1984-03-08',
       mail: 'martin.rocha@mail.com',
       phone: '82987230572',
-      profile: 'Doctor',
+      role: 'Doctor',
       password: '9miwzDsfQU',
       crm: 'CRM/AL 123456',
       expertiseId,
@@ -97,7 +97,7 @@ test('Must create a new doctor user by signup route', () => {
       expect(res.body).toHaveProperty('birthdate', '1984-03-08');
       expect(res.body).toHaveProperty('mail', 'martin.rocha@mail.com');
       expect(res.body).toHaveProperty('phone', '82987230572');
-      expect(res.body).toHaveProperty('profile', 'Doctor');
+      expect(res.body).toHaveProperty('role', 'Doctor');
       expect(res.body).not.toHaveProperty('password');
       expect(res.body).toHaveProperty('status', false);
       expect(res.body).toHaveProperty('crm', 'CRM/AL 123456');
@@ -105,7 +105,7 @@ test('Must create a new doctor user by signup route', () => {
     });
 });
 
-// Example using a doctor but it works for every user profile
+// Example using a doctor but it works for every user role
 describe('Must not create a new user by signup route...', () => {
   const testTemplate = (newUser, errorMessage) => {
     return request(API_URL).post(`${MAIN_ROUTE}/signup`)
@@ -122,7 +122,7 @@ describe('Must not create a new user by signup route...', () => {
     birthdate: '1971-03-10',
     mail: 'gabriela.aragao@mail.com',
     phone: '86994246007',
-    profile: 'Doctor',
+    role: 'Doctor',
     password: '8M123KdiQE',
     crm: 'CRM/PI 123456',
   };
@@ -152,9 +152,9 @@ describe('Must not create a new user by signup route...', () => {
   test('...with phone attribute out of format', () => testTemplate({ ...doctor, expertiseId, phone: '(86) 99424-6007' }, 'Phone attribute must be in format DDD+9 digits'));
   test('...with a phone already in use', () => testTemplate({ ...doctor, expertiseId, phone: '82987230572' }, 'Phone \'82987230572\' is already in use'));
 
-  test('...without profile attribute', () => testTemplate({ ...doctor, expertiseId, profile: undefined }, 'Profile attribute is mandatory'));
-  test('...with profile attribute out of format', () => testTemplate({ ...doctor, expertiseId, profile: 1 }, 'Profile attribute must be an string'));
-  test('...with an invalid profile', () => testTemplate({ ...doctor, expertiseId, profile: 'Teste' }, 'Profile attribute must be \'Administrator\', \'Patient\' or \'Doctor\''));
+  test('...without role attribute', () => testTemplate({ ...doctor, expertiseId, role: undefined }, 'Role attribute is mandatory'));
+  test('...with role attribute out of format', () => testTemplate({ ...doctor, expertiseId, role: 1 }, 'Role attribute must be an string'));
+  test('...with an invalid role', () => testTemplate({ ...doctor, expertiseId, role: 'Teste' }, 'Role attribute must be \'Administrator\', \'Patient\' or \'Doctor\''));
 
   test('...without password attribute', () => testTemplate({ ...doctor, expertiseId, password: undefined }, 'Password attribute is mandatory'));
   test('...with password attribute out of format', () => testTemplate({ ...doctor, expertiseId, password: 1234567890 }, 'Password attribute must be an string'));

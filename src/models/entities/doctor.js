@@ -3,8 +3,8 @@ const User = require('./user');
 const ValidationError = require('../../errors/ValidationError');
 
 module.exports = class Doctor extends User {
-  constructor(id, name, cpf, birthdate, mail, phone, password, profile, status, crm, expertiseId) {
-    super(id, name, cpf, birthdate, mail, phone, password, profile, status);
+  constructor(id, name, cpf, birthdate, mail, phone, password, role, status, crm, expertiseId) {
+    super(id, name, cpf, birthdate, mail, phone, password, role, status);
 
     this.crm = crm;
     this.expertiseId = expertiseId;

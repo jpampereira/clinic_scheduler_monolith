@@ -18,6 +18,10 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
+      - SUPER_ADMIN_ID=${SUPER_ADMIN_ID}
+      - SUPER_ADMIN_MAIL=${SUPER_ADMIN_MAIL}
+      - SUPER_ADMIN_CPF=${SUPER_ADMIN_CPF}
+      - SUPER_ADMIN_PASSWORD=${SUPER_ADMIN_PASSWORD}
     ports:
       - ${APP_PORT}:${APP_PORT}
     volumes:
