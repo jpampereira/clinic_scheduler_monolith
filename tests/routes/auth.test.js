@@ -183,7 +183,7 @@ test('Must return a token by signin route using a valid mail and password', () =
     });
 });
 
-test('Must return a token by signin route using a valid cpf and password', () => {
+test('Must return a token by signin route using a valid cpf and password of a activated user', () => {
   return request(API_URL).post(`${MAIN_ROUTE}/signin`)
     .send({
       username: '37002462261',
@@ -207,17 +207,24 @@ describe('Must not return a token by signin route...', () => {
       });
   };
 
-  const userCredentials = {
+  const user1 = {
     username: 'bernardo.duarte@mail.com',
     password: 'PmiGoKCD2N',
   };
 
-  test('...without username attribute', () => testTemplate({ ...userCredentials, username: undefined }, 'Username attribute is mandatory', 400));
-  test('...with username attribute out of format', () => testTemplate({ ...userCredentials, username: 1 }, 'Username attribute must be an string', 400));
-  test('...with an invalid username (mail)', () => testTemplate({ ...userCredentials, username: 'rosangela.caldeira@mail.com' }, 'Invalid username or password', 401));
-  test('...with an invalid username (cpf)', () => testTemplate({ ...userCredentials, username: '50793629870' }, 'Invalid username or password', 401));
+  test('...without username attribute', () => testTemplate({ ...user1, username: undefined }, 'Username attribute is mandatory', 400));
+  test('...with username attribute out of format', () => testTemplate({ ...user1, username: 1 }, 'Username attribute must be an string', 400));
+  test('...with an invalid username (mail)', () => testTemplate({ ...user1, username: 'rosangela.caldeira@mail.com' }, 'Invalid username or password', 401));
+  test('...with an invalid username (cpf)', () => testTemplate({ ...user1, username: '50793629870' }, 'Invalid username or password', 401));
 
-  test('...without password attribute', () => testTemplate({ ...userCredentials, password: undefined }, 'Password attribute is mandatory', 400));
-  test('...with password attribute out of format', () => testTemplate({ ...userCredentials, password: 1234567890 }, 'Password attribute must be an string', 400));
-  test('...with an invalid password', () => testTemplate({ ...userCredentials, password: 'fetuHDJdKd' }, 'Invalid username or password', 401));
+  test('...without password attribute', () => testTemplate({ ...user1, password: undefined }, 'Password attribute is mandatory', 400));
+  test('...with password attribute out of format', () => testTemplate({ ...user1, password: 1234567890 }, 'Password attribute must be an string', 400));
+  test('...with an invalid password', () => testTemplate({ ...user1, password: 'fetuHDJdKd' }, 'Invalid username or password', 401));
+
+  const user2 = {
+    username: 'rosangela.caldeira@mail.com',
+    password: 'fetuHDJdKd',
+  };
+
+  test('...with a deactivated user', () => testTemplate({ ...user2 }, 'Invalid username or password', 401));
 });

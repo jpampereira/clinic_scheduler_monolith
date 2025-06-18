@@ -17,7 +17,7 @@ module.exports = class AuthService {
     const userByCpf = await this.userRepository.list({ cpf: username });
     const [user] = [].concat(userByMail).concat(userByCpf);
 
-    if (!user || !AuthEntity.validatePassword(password, user.password)) {
+    if (!user || !user.status || !AuthEntity.validatePassword(password, user.password)) {
       throw new AuthorizationError('Invalid username or password');
     }
 
